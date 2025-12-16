@@ -8,6 +8,9 @@ Business intelligence (BI) teams
 👉 In short:
 Data Engineers build and maintain the data pipelines that move raw data into usable data.
 
+So overall, upstream teams generate data in different formats. As data engineers, we ingest that data, store it safely in a data lake, process and clean it using scalable pipelines, 
+     and expose curated datasets to downstream teams so they can focus on insights instead of data issues.”
+
 Interview-Style Definition :
 ============================
    Data Engineering is responsible for building and maintaining scalable data pipelines that ingest data from multiple upstream sources, process and clean it, 
@@ -176,12 +179,7 @@ Interview-Style Definition :
     “What is the main agenda of data engineering?
     “The main agenda of data engineering is to provide clean, consistent, reliable, and timely data from upstream systems to downstream consumers while ensuring scalability, security, and data quality.”
 
-10 > Final Summary :
-====================
-    “So overall, upstream teams generate data in different formats. As data engineers, we ingest that data, store it safely in a data lake, process and clean it using scalable pipelines, 
-     and expose curated datasets to downstream teams so they can focus on insights instead of data issues.”
-
-11 > Key Skills for a GCP Data Engineer :
+10 > Key Skills for a GCP Data Engineer :
 =========================================
    SQL (BigQuery)
    Python / Java
