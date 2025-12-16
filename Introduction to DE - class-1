@@ -96,8 +96,35 @@ Interview-Style Definition :
   Example: Application → Dashboard
    Step 1: Ingestion :
     “We ingest data using Dataflow or Pub/Sub depending on whether it’s batch or streaming.”
-       Batch → Dataflow / Dataproc
+       Batch → Dataflow / Dataproc      (Data proc means : Dataproc is a managed Spark and Hadoop service in GCP that allows us to run big data workloads on clusters.”)
        Streaming → Pub/Sub → Dataflow
+     What is mean by pub/sub ? : (Publisher/Subscriber)
+     ---------------------------------------------------
+       Pub/Sub (Publish–Subscribe) is a messaging service used to send, receive, and process real-time data asynchronously.
+     Core Components of Pub/Sub : 
+     ----------------------------
+     1️⃣ Publisher
+        Sends messages (events)
+        Example:
+          Application
+          IoT device
+          Microservice
+     2️⃣ Topic
+          A logical channel
+          Where messages are published
+     3️⃣ Subscriber
+          Receives messages
+          Can be:
+            Dataflow      : What is Dataflow ? (Dataflow is a fully managed, serverless data processing service in GCP used to build batch and streaming pipelines using Apache Beam.)
+            Cloud Run
+            Cloud Functions
+            Custom service
+    Why Do We Need Pub/Sub? :
+    -------------------------
+       In real-time systems, producers and consumers should not depend on each other’s availability. Pub/Sub decouples them.”
+    Pub/Sub vs Kafka :
+    ------------------
+      “Pub/Sub is fully managed and serverless, while Kafka requires cluster management. Functionally, both serve similar purposes for event streaming.
    Step 2: Raw Storag
     “The incoming data is first landed into the raw zone of the data lake in Cloud Storage.”
      Why?
@@ -153,4 +180,14 @@ Interview-Style Definition :
 ====================
     “So overall, upstream teams generate data in different formats. As data engineers, we ingest that data, store it safely in a data lake, process and clean it using scalable pipelines, 
      and expose curated datasets to downstream teams so they can focus on insights instead of data issues.”
+
+11 > Key Skills for a GCP Data Engineer :
+=========================================
+   SQL (BigQuery)
+   Python / Java
+   Apache Beam / Spark
+   GCP services (GCS, BigQuery, Dataflow, Pub/Sub)
+   Data modeling
+   Cloud security
+   CI/CD for pipelines
    
