@@ -201,16 +201,40 @@ Core GCP Data Engineering Services :
     Generates optimized SQL
     Executes queries on BigQuery
 
-11 > End-to-End GCP Data Engineering Flow :
--------------------------------------------
-       Sources
-          ↓
-    Pub/Sub / Transfer
-          ↓
-    GCS (Data Lake)
-          ↓
-    Dataflow / Dataproc
-          ↓
-    BigQuery (Warehouse)
-          ↓
-    Looker / Analytics
+11 > End-to-End GCP Data Engineering core flow :
+------------------------------------------------
+   Source → Ingestion → Data Lake → Processing → Data Warehouse → Target Team
+
+12 > Services & When to Use :
+------------------------------
+   Cloud Storage (GCS)
+     Role: Data Lake
+     Stores: Raw / Processed / Curated data
+     Why: Cheap, scalable, source of truth
+   Pub/Sub
+     Role: Streaming ingestion
+     Use when: Real-time events, IoT, logs
+     Key point: Decouples producers & consumers
+   Dataflow
+     Role: Serverless data processing
+     Use when: Streaming or batch ETL with low ops
+     Framework: Apache Beam
+   Dataproc
+     Role: Spark/Hadoop processing
+     Use when: Heavy batch, existing Spark jobs
+     Note: Cluster-based
+   BigQuery
+     Role: Data Warehouse
+     Use when: Analytics, BI, reporting
+     Key point: Serverless, columnar, fast SQL
+   Cloud Composer
+     Role: Orchestration
+     Use when: Scheduling, dependencies, retries
+     Based on: Apache Airflow
+   Cloud Functions / Cloud Run
+     Role: Event-driven compute
+     Use when: API ingestion, lightweight ETL
+   Data Lake Zones
+     Raw (Bronze): Exact source copy
+     Processed (Silver): Cleaned & validated
+     Curated (Gold): Business-ready
