@@ -1,0 +1,216 @@
+Core GCP Data Engineering Services : 
+====================================
+1️ > Google Cloud Storage (GCS) – Data Lake :
+--------------------------------------------
+    Service Name
+    Cloud Storage (GCS)
+  Purpose
+    Centralized, scalable storage for raw, processed, and curated data.
+  Used as:
+    Data Lake
+    Backup
+    Intermediate staging
+  How to Configure
+    Create a bucket
+  Choose:
+    Region / multi-region
+    Storage class (Standard, Nearline)
+    Set IAM permissions
+    (Optional) Enable lifecycle rules
+  How It Works in Backend
+    Object-based storage (not file system)
+    Data stored as immutable objects
+    Automatically replicated
+    High durability (11 nines)
+  Interview line ⭐:
+    “GCS acts as the source of truth for all raw data.”
+
+2 > Pub/Sub – Streaming Ingestion :
+-----------------------------------
+  Service Name
+    Cloud Pub/Sub
+  Purpose
+    Real-time, asynchronous event ingestion.
+  Used for:
+    Streaming pipelines
+    IoT events
+    Event-driven architectures
+  How to Configure
+    Create a topic
+    Create a subscription
+    Grant publisher/subscriber IAM roles
+    Publish messages
+  Backend Working
+    Publisher sends messages to topic
+    Messages stored temporarily
+    Subscribers pull or receive push messages
+    At-least-once delivery
+  Interview line ⭐:
+    “Pub/Sub decouples producers and consumers.”
+
+3 > Dataflow – Data Processing :
+---------------------------------
+  Service Name
+    Cloud Dataflow
+  Purpose
+    Serverless service for batch and streaming data processing.
+  Used for:
+    ETL pipelines
+    Streaming transformations
+  How to Configure
+    Write pipeline in Apache Beam
+    Define source & sink
+    Submit job
+    Configure worker settings
+  Backend Working
+    Uses Apache Beam model
+    GCP provisions workers automatically
+    Auto-scaling based on load
+    Handles fault tolerance
+  Interview line ⭐:
+    “We focus on pipeline logic; Google manages infrastructure.”
+
+4 > Dataproc – Spark / Hadoop Processing :
+------------------------------------------
+  Service Name
+    Cloud Dataproc
+  Purpose
+    Managed Spark & Hadoop clusters.
+  Used for:
+    Heavy batch processing
+    Large historical datasets
+  How to Configure
+    Create cluster
+    Choose machine types
+    Install components (Spark, Hive)
+    Submit Spark jobs
+  Backend Working
+    VM-based cluster
+    Jobs executed on Spark executors
+    Data read from GCS
+    Output written to GCS / BigQuery
+  Interview line ⭐:
+    “Dataproc gives flexibility at the cost of operational overhead.”
+
+5 > BigQuery – Data Warehouse :
+-------------------------------
+  Service Name
+    BigQuery
+  Purpose
+    Serverless data warehouse for analytics.
+  Used for:
+    BI reporting
+    Analytical queries
+    ML feature storage
+  How to Configure
+    Create dataset
+    Create tables
+    Load or stream data
+    Configure partitioning & clustering
+  Backend Working
+    Columnar storage
+    Distributed query engine
+    SQL executed across thousands of nodes
+    Automatic scaling
+  Interview line ⭐:
+    “BigQuery separates compute and storage.”
+
+6 > Cloud Composer – Orchestration :
+------------------------------------
+  Service Name
+    Cloud Composer
+  Purpose
+    Workflow orchestration using Apache Airflow.
+  Used for:
+    Scheduling pipelines
+    Managing dependencies
+    Alerting
+  How to Configure
+    Create Composer environment
+    Write DAGs in Python
+    Define tasks
+    Schedule execution
+  Backend Working
+    Managed Airflow service
+    DAGs stored in GCS
+    Scheduler triggers tasks
+    Executes operators
+  Interview line ⭐:
+    “Composer coordinates pipeline execution.”
+
+7 > Cloud Functions / Cloud Run – Event Processing :
+----------------------------------------------------
+  Service Name
+    Cloud Functions / Cloud Run
+  Purpose
+    Lightweight event-driven processing.
+  Used for:
+    API ingestion
+    Pub/Sub triggers
+    Small ETL tasks
+  How to Configure
+    Write code (Python/Node)
+    Define trigger
+    Deploy function/service
+    Assign IAM roles
+  Backend Working
+    Serverless execution
+    Scales automatically
+    Executes on demand
+
+8 > Data Catalog – Metadata Management :
+----------------------------------------
+  Service Name
+    Data Catalog
+  Purpose
+    Metadata and data discovery.
+  How to Configure
+    Enable Data Catalog
+  Register datasets
+    Tag metadata
+  Backend Working
+    Scans GCP services
+    Stores metadata centrally
+    Supports governance
+
+9 > Cloud DLP – Data Security :
+--------------------------------
+  Service Name
+    Cloud Data Loss Prevention (DLP)
+  Purpose
+    Detect and mask sensitive data.
+  How to Configure
+    Define inspection rules
+    Identify PII
+    Mask or tokenize data
+  Backend Working
+    Pattern-based scanning
+    ML-based classification
+
+10 > Looker – BI Layer :
+------------------------
+   Service Name
+     Looker
+   Purpose
+     Business intelligence and dashboards.
+   How to Configure
+     Connect to BigQuery
+     Define LookML models
+     Build dashboards
+  Backend Working
+    Generates optimized SQL
+    Executes queries on BigQuery
+
+11 > End-to-End GCP Data Engineering Flow :
+-------------------------------------------
+       Sources
+          ↓
+    Pub/Sub / Transfer
+          ↓
+    GCS (Data Lake)
+          ↓
+    Dataflow / Dataproc
+          ↓
+    BigQuery (Warehouse)
+          ↓
+    Looker / Analytics
