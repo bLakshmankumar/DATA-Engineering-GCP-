@@ -58,10 +58,13 @@ Interview-Style Definition :
     ML model training
     Reporting systems
 
-3 > What We Do as Data Engineers :
-==================================
+3 > What We Do as Data Engineers or Role of a date engineer :
+=============================================================
    Upstream → Data Engineering → Downstream
-   Our responsibility is to take this raw data and convert it into clean, reliable, and structured datasets before exposing it to downstream teams
+   Our responsibility is to take this raw data and convert it into clean, reliable, and structured datasets before exposing it to downstream teams.
+ Role of a date engineer : 
+   A data engineer is responsible for ingesting data from source systems, storing it efficiently in a data lake, processing and transforming it into clean datasets, 
+   ensuring data quality and governance, integrating multiple systems, optimizing performance, and monitoring pipelines so downstream teams can rely on trusted data.”
 
  What is a Data Lake in Data Engineering (GCP)? :
  ================================================
