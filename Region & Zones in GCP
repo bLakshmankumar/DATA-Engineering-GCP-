@@ -1,0 +1,8 @@
+What is mean by Region, Zone & Location in GCP : 
+================================================
+ Location : In GCP, Location tells where a resource lives.
+ Region   : A Region is a geographical area like Mumbai or Iowa.
+ Zone     : A Zone is an isolated data center inside a region.
+
+A region has multiple zones, and each zone has its own power, cooling, and network.
+If one zone fails, other zones in the same region continue working, which helps with high availability.
