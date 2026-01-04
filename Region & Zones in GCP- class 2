@@ -1,0 +1,7 @@
+What is mean by Region, Zone & Location in GCP : 
+================================================
+In GCP, resources are organized hierarchically.
+At the top, we have Location, which defines where a service is available.
+Inside a location, we have Regions, which are geographic areas like Mumbai.
+Each region contains multiple Zones, and each zone represents a separate data center.
+Inside a data center, we run actual resources like virtual machines, disks, and Kubernetes nodes.
