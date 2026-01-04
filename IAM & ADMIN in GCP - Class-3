@@ -1,0 +1,75 @@
+Explanation of IAM & Admin in GCP :
+=================================
+IAM in GCP is used to control access to cloud resources by defining who can perform what actions on which resources.
+It works using identities, roles, and permissions applied through IAM policies.
+GCP follows a hierarchical resource model where permissions inherit from organization to project to resources.
+For security, we follow least privilege, avoid basic roles, use service accounts for workloads, and manage access via groups.
+
+What is IAM in GCP? :
+=====================
+IAM (Identity and Access Management) in GCP controls
+who can do what on which resource.
+  In short:
+    Who → Identity    :
+    What → Permission
+    Which resource → GCP resource (project, VM, bucket, etc.)
+IAM works using 4 main components:
+  Identity → Role → Permissions → Resource
+Let’s break them down 👇 :
+---------------------------
+ 1. Identity (WHO) :
+      An identity is someone or something that needs access.
+      Types of identities:
+        Google user → user@gmail.com
+        Service account → application or VM identity
+        Google group → team-based access
+        Domain → entire organization
+     👉 Best practice:
+           Give access to groups, not individual users.
+ 2. Permissions (WHAT actions)
+      Permissions define exact actions allowed.
+      Examples:
+        compute.instances.start
+        storage.objects.get
+        container.pods.list
+     ⚠️ We never assign permissions directly — they are grouped into roles.
+ 3. Roles (Collection of permissions)
+      A role is a set of permissions.
+      Types of roles in GCP:
+        Role Type	Description
+        Basic roles	Owner, Editor, Viewer (broad, not recommended)
+        Predefined roles	Service-specific, recommended
+        Custom roles	Created by you, least privilege
+      Example:
+        roles/compute.admin
+        roles/storage.objectViewer
+        roles/container.developer
+   👉 Interview Tip:
+        Always say “We prefer predefined or custom roles over basic roles.”
+ 4. Resources (WHERE access applies)
+      IAM policies are applied to resources, such as:
+        Organization
+        Folder
+        Project
+        Specific resource (VM, bucket, dataset)
+      Resource hierarchy:
+        Organization
+          └── Folder
+                └── Project
+                      └── Resources (VM, GKE, Storage)
+  5. IAM Policy (How access is granted) :
+       Role = What actions are allowed
+       IAM Policy = Who gets that role, and on which resource
+     Important:
+       A role does nothing by itself
+       It must be attached via an IAM policy 
+     Where IAM Policies are applied :
+        IAM policies are attached to resources, such as:
+          Organization
+          Folder
+          Project
+          Specific resource (bucket, VM, topic)
+
+     ## Can we assign permissions directly to a user?
+     ## ANS : No. Permissions are always assigned through roles, and roles are granted via IAM policies.
+
