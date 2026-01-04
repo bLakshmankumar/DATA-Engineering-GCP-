@@ -5,3 +5,38 @@ At the top, we have Location, which defines where a service is available.
 Inside a location, we have Regions, which are geographic areas like Mumbai.
 Each region contains multiple Zones, and each zone represents a separate data center.
 Inside a data center, we run actual resources like virtual machines, disks, and Kubernetes nodes.
+
+How to choose Region & Zone in GCP (Selection Criteria) :
+=========================================================
+1 > Proximity to users (Latency) :
+      Always deploy applications close to target customers to reduce network latency and improve performance.
+        Example: Users in India → asia-south1 (Mumbai)
+        Benefit: Faster response time, better user experience
+2 > High Availability (Multi-Zone deployment) :
+      Deploy applications across multiple zones within the same region to protect against unexpected zone failures.
+        Use at least 2–3 zones
+        If one zone goes down, traffic is served from another zone
+        Common for: GKE, VM-based apps, backend services
+3 > Disaster Recovery (Multi-Region strategy) :
+      For business-critical systems, deploy across multiple regions.
+        Protects against regional outages
+        Supports active-passive or active-active setups
+        Example: asia-south1 + asia-east1
+4 > Pricing differences :
+      Pricing varies between regions and zones, so cost must be evaluated.
+        Compute, storage, and networking costs differ
+        Cross-region traffic is more expensive
+        Choose region that balances cost and performance
+5 > Service availability :
+      Not all GCP services are available in every region.
+        Some ML, AI, or managed services are region-specific
+        Always verify service availability before finalizing region
+6 > Data residency & compliance :
+      Choose region based on regulatory and compliance requirements.
+      Financial or government data may require data to stay in a specific country
+        Example: Indian data hosted only in India
+
+Interview-Friendly Summary (Say this confidently) :
+====================================================
+  I select regions based on user proximity, compliance, pricing, and service availability.
+  I deploy applications across multiple zones within a region for high availability, and use multiple regions for disaster recovery when required.
