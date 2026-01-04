@@ -33,6 +33,7 @@ Let’s break them down 👇 :
         storage.objects.get
         container.pods.list
      ⚠️ We never assign permissions directly — they are grouped into roles.
+
  3. Roles (Collection of permissions)
       "A role is a set of permissions".
         Types of roles in GCP:
@@ -46,6 +47,7 @@ Let’s break them down 👇 :
         roles/container.developer
    👉 Interview Tip:
         Always say “We prefer predefined or custom roles over basic roles.”
+    Note : we can create multiple roles and assign multiple roles to the same user, service account, or group.
  4. Resources (WHERE access applies)
       IAM policies are applied to resources, such as:
         Organization
@@ -57,6 +59,7 @@ Let’s break them down 👇 :
           └── Folder
                 └── Project
                       └── Resources (VM, GKE, Storage)
+
   5. IAM Policy (How access is granted) :
        Role = What actions are allowed
        IAM Policy = Who gets that role, and on which resource
@@ -121,7 +124,99 @@ When a user or service tries to access a resource:
             Select custom role
             Save
 # Role vs Policy(Interview perspective) :
+=========================================
 A role is a set of permissions that defines what actions are allowed.
 An IAM policy is what actually grants access by binding a role to an identity on a resource.
 When a request is made, GCP evaluates IAM policies on the resource hierarchy and checks whether the assigned role contains the required permission.
 Access is granted only if both the identity and permission match.
+
+# What is a Service Account : 
+=============================
+A service account is an identity used by applications or workloads to access GCP services securely.
+Instead of using user credentials, applications authenticate as a service account, and GCP authorizes access based on IAM roles assigned to that service account.
+Service accounts support secure, non-interactive authentication and are commonly used with VMs, GKE, and CI/CD pipelines following the principle of least privilege.
+   Users → for humans
+   Service Accounts → for applications / automation
+
+Why Service Accounts exist (Why not user credentials?)
+   Problems with user credentials:
+     Passwords expire
+     Users leave the company
+     Not secure for automation
+👉 Service Accounts solve this by providing:
+     Stable identity
+     Fine-grained permissions
+     Secure authentication
+
+How Service Accounts work :
+---------------------------
+  Application / VM / Pod
+        |
+   Service Account
+        |
+      IAM Role
+        |
+   GCP Resource
+The application assumes the identity of the service account,
+and GCP checks IAM roles assigned to that service account.
+
+Authenticate using:
+-------------------
+   Short-lived OAuth tokens
+   Workload Identity
+   Permissions are granted via IAM roles
+
+> Types of Service Accounts :
+-----------------------------
+  1. User-managed Service Account :
+      Created by you
+      Fully controlled permissions
+      Used for apps, CI/CD, GKE
+  2. Default Service Accounts (Use carefully ⚠️) :
+      Compute Engine default SA
+      Best practice:
+        Remove permissions Or don’t use it
+  3. Google-managed Service Accounts :
+       Used internally by GCP services
+       We usually don’t manage them
+
+How Service Accounts get permissions :
+--------------------------------------
+   Service accounts don’t have permissions by default.
+   You assign permissions using IAM roles.
+   Example :  
+     Service Account: app-sa
+     Role: roles/storage.objectAdmin
+     Resource: my-project
+   This is stored as an IAM policy binding.
+ 
+   Real time Example 1: VM accessing Cloud Storage(Configuration using GCP Console) :
+   ----------------------------------------------------------------------------------
+      Step 1: Create a Service Account
+              Go to IAM & Admin → Service Accounts
+              Click Create Service Account
+              Name: vm-gcs-reader-sa
+              Skip role assignment for now
+              Create
+              Service account email: vm-gcs-reader-sa@PROJECT_ID.iam.gserviceaccount.com
+      Step 2: Grant GCS access to the Service Account (Bucket-level access (best practice))
+              Go to Cloud Storage → Buckets
+              Select your bucket
+              Go to Permissions
+              Add member → Service Account
+              Role → roles/storage.objectViewer
+      Step 3: Attach Service Account to VM
+              Go to Compute Engine → VM Instances
+              Create or Edit a VM
+              Under Identity and API access:
+              Service Account → vm-gcs-reader-sa
+              Access Scopes → Allow full access to all Cloud APIs
+              Save / Create VM
+              📌 IAM controls access, not access scopes, when using IAM properly.
+      Step 4: Verify access from VM
+              SSH into the VM and run: gsutil ls gs://YOUR_BUCKET_NAME
+                ✔ Works → IAM configured correctly
+                ❌ Fails → Missing role or wrong service account
+
+
+
