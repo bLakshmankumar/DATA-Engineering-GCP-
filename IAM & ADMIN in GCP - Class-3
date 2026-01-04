@@ -34,12 +34,12 @@ Let’s break them down 👇 :
         container.pods.list
      ⚠️ We never assign permissions directly — they are grouped into roles.
  3. Roles (Collection of permissions)
-      A role is a set of permissions.
-      Types of roles in GCP:
-        Role Type	Description
-        Basic roles	Owner, Editor, Viewer (broad, not recommended)
-        Predefined roles	Service-specific, recommended
-        Custom roles	Created by you, least privilege
+      "A role is a set of permissions".
+        Types of roles in GCP:
+          Role Type	Description
+            Basic roles	Owner, Editor, Viewer (broad, not recommended)
+            Predefined roles	Service-specific, recommended
+            Custom roles	Created by you, least privilege
       Example:
         roles/compute.admin
         roles/storage.objectViewer
@@ -73,3 +73,55 @@ Let’s break them down 👇 :
      ## Can we assign permissions directly to a user?
      ## ANS : No. Permissions are always assigned through roles, and roles are granted via IAM policies.
 
+# How IAM works in the background (GCP internals – simplified) :
+================================================================
+When a user or service tries to access a resource:
+  Step-by-step flow:
+    Authentication
+      Who are you? (Google account / service account)
+    Authorization
+      GCP checks IAM policies attached to:
+      Resource
+      Parent project
+      Folder
+      Organization
+      Permission evaluation
+    GCP checks:
+      Does any policy grant a role that contains the required permission?
+        Decision
+          ✅ Allowed → request proceeds
+          ❌ Denied → 403 error
+        Important:
+          IAM policies are additive (no deny rules in standard IAM).
+
+# How to configure Role & Policy (Step-by-step) :
+=================================================
+  1. Assign a predefined role (Most common) :
+     Using GCP Console:
+       Go to IAM & Admin → IAM
+       Select project
+       Click Grant Access
+       Add:
+         Member (user / group / service account)
+         Role (e.g., roles/container.developer)
+       Save
+       ✔ This creates an IAM policy binding
+    2. Create a custom role :
+       Go to IAM & Admin → Roles
+       Create Custom Role
+       Select permissions
+       Save
+       Example : Custom Role: vm-start-stop
+         Permissions:
+         - compute.instances.start
+         - compute.instances.stop 
+     3. Attach custom role via policy :
+          Same as predefined:
+            Add member
+            Select custom role
+            Save
+# Role vs Policy(Interview perspective) :
+A role is a set of permissions that defines what actions are allowed.
+An IAM policy is what actually grants access by binding a role to an identity on a resource.
+When a request is made, GCP evaluates IAM policies on the resource hierarchy and checks whether the assigned role contains the required permission.
+Access is granted only if both the identity and permission match.
