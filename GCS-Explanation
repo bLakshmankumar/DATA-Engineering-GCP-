@@ -1,0 +1,233 @@
+What is GCS : 
+=============
+"GCS is a globally scalable object storage service offering multiple storage classes, flexible location options, IAM-based access control, lifecycle management, and strong security integrations. 
+ It’s ideal for unstructured data, backups, analytics, and ML workloads."
+ Used for static content, backups, analytics, ML
+
+1.0 Core Building Blocks of GCS :
+=================================
+  1.1 Bucket :
+  ------------
+  A bucket is the top-level container.
+  Important properties:
+  Bucket name is globally unique 
+  Bucket has a location
+  Bucket has a storage class
+  Bucket has IAM policies
+  Bucket can have lifecycle rules
+📌 Interview tip:
+  We cannot change bucket location after creation.
+
+  1.2 Object :
+  -------------
+  An object is the actual data (file)
+  Each object has:
+    Name
+    Data
+    Metadata
+    Generation number (for versioning)
+📌 Objects are immutable → update = upload new version.
+
+ 2.0 Bucket Location Options (Very Important 🔥)
+ ================================================
+   2.1 Region
+   -----------
+    Example: asia-south1, us-central1
+    Use when:
+      Low latency needed
+      Data residency laws
+      Applications running in same region
+  📌 Interview example:
+       If my users are in India and app is in asia-south1, I’ll choose regional bucket.
+   2.2 Dual-Region :
+   -----------------
+   Example:
+     asia1 (Mumbai + Singapore)
+     eur4 (Netherlands + Finland)
+   Use when:
+     High availability
+     Disaster recovery
+   Read-heavy workloads
+  📌 Data automatically replicated across two regions.
+  📌 Interview one-liner:
+        Dual-region provides higher availability without managing replication manually.
+  2.3 Multi-Region :
+  ------------------
+  Example:
+    US
+    EU
+    ASIA
+  Use when:
+    Global users
+    CDN-style workloads
+    Static websites
+ 📌 Highest availability, slightly higher cost.
+
+ 3.0 : Storage Classes (MOST ASKED) : 
+ ====================================
+   3.1 Standard Storage
+   ---------------------
+       Hot data
+         Used for: 
+           Frequently accessed data
+           Websites
+           Mobile apps
+           Streaming
+         Characteristics:
+           High availability
+           No minimum storage duration
+      📌 Interview line:
+           Standard is best when data is accessed frequently.
+   
+   3.2 Nearline Storage :
+   ---------------------
+      Accessed once a month
+        Used for:
+          Monthly backups
+          DR snapshots
+        Rules:
+          Minimum 30-day storage
+          Retrieval cost exists
+     📌 Interview comparison:
+          Nearline is cheaper than Standard but has access cost.
+
+    3.3 Coldline Storage :
+    ----------------------
+      Accessed once per quarter
+        Used for:
+          Compliance backups
+          Long-term logs
+        Rules:
+          Minimum 90-day storage
+          Higher access cost
+
+    3.4 : Archive Storage :
+    -----------------------
+      Very rarely accessed (once a year)
+        Used for:
+          Legal data
+          Audit records
+          Long-term retention
+        Rules:
+          Minimum 365-day storage
+          Cheapest storage
+          Highest retrieval cost
+     📌 Interview trick question:
+           Archive is not “slow like tape” — it’s still online, just expensive to read.
+
+  4.0 Access Control Options (IAM vs ACL) :
+  =========================================
+    4.1 IAM (Recommended ✅)
+    -------------------------
+       Controls who can do what on bucket or objects
+       Roles:
+         storage.objectViewer
+         storage.objectAdmin
+         storage.admin
+     📌 Best practice:
+           Use IAM, not ACL.
+
+     4.2 Uniform vs Fine-grained Access :
+     ------------------------------------
+       > Uniform Bucket-Level Access (Recommended)
+           Disable ACLs
+           IAM only
+           Simpler and secure
+       > Fine-grained
+           Allows ACL + IAM
+           Complex
+           Legacy setups
+      📌 Interview best answer:
+            Always use uniform access unless legacy systems require ACLs.
+
+  5.0 Object Versioning :
+  =======================
+    5.1 What it does :
+    -------------------
+       Keeps old versions of objects
+       Prevents accidental deletes or overwrites
+     Use cases:
+       Rollback
+       Audit
+       Safety net
+    📌 Important:
+          Deleted objects become non-current versions, not removed.
+
+  6.0 Lifecycle Management Rules (Cost Optimization 🔥)
+  ======================================================
+     Automatically move or delete objects.
+     Examples:
+       After 30 days → move to Nearline
+       After 365 days → Archive
+      Delete old versions after 90 days
+  📌 Interview scenario:
+        Lifecycle rules help reduce storage cost automatically.
+
+  7.0 Retention Policies & Legal Hold (Compliance) :
+  ==================================================
+   7.1 Retention Policy
+   --------------------
+      Prevent deletion for X days/years
+      Cannot be bypassed
+   7.2 Legal Hold :
+   ----------------
+      Locks individual objects
+      Used for investigations
+  📌 Interview usage:
+        Used in finance, healthcare, compliance workloads.
+
+ 8.0 Encryption Options :
+ ========================
+  8.1 Google-managed keys (Default)
+  ---------------------------------
+    Automatic
+    No management
+  8.2 Customer-managed keys (CMEK)
+  --------------------------------
+    Stored in Cloud KMS
+    You control rotation & access
+  8.3 Customer-supplied keys (CSEK)
+  ---------------------------------
+    You provide key per request
+    Least used, complex
+📌 Interview pick:
+      CMEK is best for compliance-driven environments.
+
+ 9.0 Data Access Options :
+ ========================
+  9.1 Signed URLs
+  ---------------
+    Time-limited access
+    No IAM needed
+  9.2 Signed Policy Documents
+  ---------------------------
+    Browser-based uploads
+ 📌 Interview use case:
+       Allow temporary access to private objects.
+
+ 10.0 Networking Options :
+ =========================
+   10.1 Public Access
+   ------------------
+      Objects accessible via URL
+   10.2 Private Access 
+   --------------------
+      IAM controlled
+   10.3 VPC Service Controls 
+   -------------------------
+     Protect against data exfiltration
+  📌 Interview line:
+        VPC Service Controls add an extra security boundary.
+
+ 11.0 Pricing Factors (Interview Must-Know) :
+ ============================================
+   Pricing depends on:
+  --------------------
+     Storage class
+     Location
+     Data access
+     Network egress
+     Operations (GET, PUT)
+📌 Golden rule:
+     Storage is cheap, access is what costs.
+
