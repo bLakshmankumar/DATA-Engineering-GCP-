@@ -1,0 +1,104 @@
+What is google cloud shell : 
+============================
+Cloud Shell allows secure, quick access to GCP resources without local setup.
+
+1. Cloud Shell Basics :
+-----------------------
+  Cloud Shell = browser-based Linux VM with:
+  Preinstalled gcloud, gsutil, kubectl
+  Temporary (but persistent $HOME)
+  Uses your logged-in GCP identity
+
+2. Authentication & Project Setup :
+-----------------------------------
+  Cmd to check active account : gcloud auth list
+  Cmd to check active project : gcloud config list project
+  Cmd to set project (very common interview task) : gcloud config set project my-gcp-project-id
+
+3. List Buckets :
+-----------------
+  List all buckets in project : gsutil ls  (gsutil ls without args lists all buckets under the active project).
+
+4. Create Buckets :
+-------------------
+  Create a regional bucket : gsutil mb -p my-gcp-project-id -l asia-south1 gs://my-regional-bucket/
+  Create multi-region bucket : gsutil mb -p my-gcp-project-id -l US gs://my-multiregion-bucket/
+  Create bucket with storage class : gsutil mb -p my-gcp-project-id -l asia-south1 -c NEARLINE gs://my-nearline-bucket/
+  Note : Location and storage class are fixed at bucket creation time.
+
+5. Upload Objects to Bucket :
+-----------------------------
+   Upload single file : gsutil cp myfile.txt gs://my-regional-bucket/
+   Upload directory recursively : gsutil cp -r ./logs gs://my-regional-bucket/
+   List Objects Inside Bucket : gsutil ls gs://my-regional-bucket/
+
+6. Copy Objects Between Buckets :
+---------------------------------
+   Copy single object (asia → us) : gsutil cp gs://asia-bucket/data.csv gs://us-bucket/  (This creates a new copy in destination region).
+   Copy entire folder across regions : gsutil cp -r gs://asia-bucket/logs gs://us-bucket/
+      Is this a replication?  ❌ No — this is a one-time copy.
+
+7. Parallel copy (PRODUCTION 🔥) :
+----------------------------------
+   gsutil -m cp -r gs://asia-bucket/logs gs://us-bucket/ [-m = multithreaded → faster for large data]
+
+8. Change Storage Class of Existing Objects :
+---------------------------------------------
+   Standard → Coldline : gsutil rewrite -s COLDLINE gs://my-bucket/**
+   Note : You cannot change bucket storage class, but you can rewrite objects.
+
+9. Enable Versioning (Safety Feature) :
+---------------------------------------
+   gsutil versioning set on gs://my-regional-bucket/
+
+10. Lifecycle Rules (REAL WORLD) : 
+----------------------------------
+   Example lifecycle.json :
+   -------------------------
+{
+  "rule": [
+    {
+      "action": {"type": "SetStorageClass", "storageClass": "NEARLINE"},
+      "condition": {"age": 30}
+    },
+    {
+      "action": {"type": "Delete"},
+      "condition": {"age": 365}
+    }
+  ]
+}
+ Apply lifecycle : [Lifecycle rules automate cost optimization]
+ -----------------
+   gsutil lifecycle set lifecycle.json gs://my-regional-bucket/ 
+
+11. IAM Permissions via Command Line :
+--------------------------------------
+  Grant read access : gsutil iam ch user:abc@gmail.com:objectViewer gs://my-regional-bucket/
+  View IAM policy : gsutil iam get gs://my-regional-bucket/
+
+12. Storage Transfer Service (Complex Use Case) :
+-------------------------------------------------
+  From S3 → GCS (Conceptual) : gcloud transfer jobs create s3://source-bucket gs://dest-bucket
+  Used for:
+    One-time or scheduled migration
+    Large-scale enterprise transfers
+
+ 13. Prevent Accidental Deletes :
+ --------------------------------
+     gsutil retention set 365d gs://finance-bucket/
+
+ 14. Difference between cp and rsync?
+ -------------------------------------
+    cp copies everything, rsync copies only differences.
+
+ 15. How to speed up large transfers?
+ ------------------------------------
+    Use -m flag.
+ 
+
+
+
+
+
+  
+    
