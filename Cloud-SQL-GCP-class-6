@@ -155,3 +155,63 @@ Cloud SQL is a fully managed relational database service on GCP that provides My
                ✔ Best practice
                ✔ Highly secure 
             Why best practice: Eliminates password management, avoids public IPs, works seamlessly with IAM and private networking.
+
+   8. Backup & Recovery Options :
+   ------------------------------
+       > Automated Backups :
+       ---------------------
+         Choose:
+           Enable
+           Backup time window
+         If ENABLED:
+           ✔ Disaster recovery
+           ✔ Point-in-time recovery
+         If DISABLED:
+           ❌ No recovery if data is lost
+        👉 Always enable backups
+       > Point-in-Time Recovery (PITR) :
+       ---------------------------------
+         Uses binary logs / WAL logs
+         Restore DB to specific timestamp
+         ✔ Excellent for accidental deletes 
+
+   9. Maintenance Options :
+   ------------------------
+       Maintenance Window
+         Choose day & time
+         GCP applies updates here
+       If NOT specified:
+         ❌ Updates can happen anytime
+         👉 Set maintenance window during low traffic
+
+   10. Advanced Options (Interview Gold ⭐)
+   ----------------------------------------
+       > Deletion Protection :
+       -----------------------
+           What it does
+             Prevents accidental deletion of instance
+           If ENABLED:
+             ✔ Cannot delete DB accidentally
+           If NOT enabled:
+             ❌ One click → DB gone
+           👉 Always enable for prod
+        > Flags (DB-level tuning) :
+        --------------------------
+            Examples:
+              max_connections
+              log_statement
+              ✔ Fine-tuning
+              ❌ Wrong config can break DB
+          > CMEK (Customer-managed encryption key) :
+          -------------------------------------------
+              Use your own KMS key
+                ✔ Compliance
+                ❌ Extra complexity
+      11. Create Instance :
+      --------------------
+            Click Create [Takes 5–10 minutes]
+            Behind the scenes:
+              VM created
+              Disk attached
+              DB engine installed
+              HA replica (if enabled)
