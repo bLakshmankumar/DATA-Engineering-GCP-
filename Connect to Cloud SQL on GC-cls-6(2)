@@ -1,0 +1,65 @@
+Connect to Cloud SQL on GCP: Workbench, Proxy, and Private IP (From Scratch) :
+==============================================================================
+   Method 1 : Connect from MySQL Workbench :
+   ----------------------------------------
+      This uses Public IP + Authorized Networks
+      STEP 1️⃣ Ensure Public IP is enabled :
+      --------------------------------------
+      Go to:
+         GCP Console → Cloud SQL → Your Instance → Connections
+      Check:
+        ✅ Public IP → ENABLED
+      If not enabled:
+        Click Add Network Interface
+        Enable Public IP
+     STEP 2️⃣ Add your IP to Authorized Networks :
+     ---------------------------------------------
+       Still in Connections tab:
+         Click Add a network
+         Name: my-laptop
+         Network:
+           Ex : your laptop ip [YOUR_PUBLIC_IP/32]
+         Why this is needed?
+         --------------------
+           Cloud SQL blocks all traffic by default
+           Authorized networks act like a firewall
+           ❌ If you skip this → connection will FAIL
+        STEP 3️⃣ Enable SSL (Optional but recommended) :
+        ------------------------------------------------
+           Cloud SQL supports SSL by default.
+           Options:
+             Without SSL → simpler
+             With SSL → more secure
+          👉 For learning: SSL optional
+          👉 For interviews: say SSL is recommended
+        STEP 4️⃣ Get Cloud SQL connection details :
+       -------------------------------------------
+          From Overview tab:
+            Public IP
+            Port: 3306
+            Username
+            Password
+          Example : 
+             Host: 34.xxx.xxx.xxx
+             Port: 3306
+             Username: app_user
+        STEP 5️⃣ Configure MySQL Workbench :
+        ------------------------------------
+          Open MySQL Workbench → Add new connection
+          Fill details:
+            Connection Name: cloudsql-mysql
+            Hostname: Public IP
+            Port: 3306
+            Username: DB user
+            Password: Store securely
+          Click Test Connection
+          ✅ If success → you’re connected 🎉
+
+    # Common errors & reasons :
+    ---------------------------
+         Error	                          Reason
+     Can't connect                 	IP not whitelisted
+     Access denied	              Wrong username/password
+        Timeout                   	Public IP disabled
+       SSL error                   	SSL misconfiguration
+
