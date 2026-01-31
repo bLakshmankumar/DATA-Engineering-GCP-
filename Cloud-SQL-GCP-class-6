@@ -1,0 +1,71 @@
+What is Cloud-sql : 
+===================
+Cloud SQL is a fully managed relational database service on GCP that provides MySQL, PostgreSQL, and SQL Server with automated maintenance, backups, high availability, and secure connectivity.
+1. Unstructured Data->GCS :
+     What it is: Data that has no predefined format. Think of images, videos, PDFs, or audio files.
+     The Path: Because there are no rows or columns to "sort," you just need a giant bucket to hold them.
+     The GCP Tool: GCS (Google Cloud Storage). It is an "object store," meaning it’s like a digital warehouse for files of any size.
+2. Semi-Structured Data->BigTable
+     What it is: Data that doesn't fit perfectly into a rigid table but has some organization (like tags or markers). Common examples are JSON files, XML, or sensor data from IoT devices.
+     The Path: This data often moves fast and needs to be accessed quickly for both OLTP (fast updates, like a user profile change) and OLAP (heavy analysis).
+     The GCP Tool: BigTable. This is a high-performance "NoSQL" database. It’s designed to handle massive workloads with incredibly low latency (it's what powers Google Search and Maps).
+3. Structured Data->OLTP :
+     What it is: Highly organized data that fits perfectly into rows and columns, like an Excel sheet or a bank ledger.
+     The Path: The diagram specifically points to OLTP (Online Transactional Processing). This is for "day-to-day" operations where accuracy and speed are vital—like swiping a credit card or updating an inventory count.
+     The GCP Tool (Contextual): While not named in the bottom box, for structured OLTP, GCP usually uses Cloud SQL or Cloud Spanner.
+   Key Terms Defined :
+   -------------------
+     OLTP (Online Transaction Processing) systems are designed to run day-to-day operations. They handle a large number of small, fast transactions like inserts and updates, and they must respond in milliseconds with strong data consistency.
+     OLAP (Online Analytical Processing) systems are designed to analyze business data. They handle complex read-heavy queries over large historical datasets, focusing on aggregations and trends rather than real-time updates.
+     GCP mapping (very useful) : 
+     ---------------------------
+         Type   	     GCP-Services
+         OLTP   	 Cloud SQL, Cloud Spanner
+         OLAP	         BigQuery
+        Hybrid	   Spanner + BigQuery
+
+# Cloud SQL Setup on GCP — From Scratch :
+=========================================
+  1. Project prerequisites (very important) :
+  -------------------------------------------
+      Before creating Cloud SQL, you must have:
+      > GCP Project
+      -------------
+        A project is a logical container
+        Billing must be enabled
+     👉 If billing is not enabled → Cloud SQL creation will fail
+      > Required APIs :
+      -----------------
+        GCP automatically enables these, but internally it needs:
+        Cloud SQL Admin API
+        Compute Engine API
+        Service Networking API
+     👉 Without these → instance won’t create or connect
+      > Network decision (think early) :
+      ----------------------------------
+        Decide:
+          Public IP (internet access)
+          Private IP (recommended for production)
+        This affects security + architecture
+
+   2. Create Cloud SQL Instance :
+   ------------------------------
+        Navigation :
+        ------------
+          GCP Console → SQL → Create Instance
+        Choose database engine:
+          MySQL
+          PostgreSQL
+          SQL Server
+       👉 Interview note: Engine choice depends on application compatibility
+
+   3. Instance Info (Basic) :
+   --------------------------
+        > Instance ID
+        -------------
+            Unique name (Cannot be changed later)
+               Example [orders-db-prod] : [Used in: Connections, Logs, IAM]
+        > Password (root / postgres user)
+            Superuser password
+            Required for DB access
+        ⚠️ If we lose it → must reset
