@@ -65,7 +65,93 @@ Cloud SQL is a fully managed relational database service on GCP that provides My
         -------------
             Unique name (Cannot be changed later)
                Example [orders-db-prod] : [Used in: Connections, Logs, IAM]
-        > Password (root / postgres user)
+        > Password (root / postgres user) :
+        -----------------------------------
             Superuser password
             Required for DB access
         ⚠️ If we lose it → must reset
+        > Database version :
+        --------------------
+            Example:
+              MySQL 8.0
+              PostgreSQL 15
+          👉 Always choose latest stable version
+           Better performance
+           Security fixes
+
+   4. Region & Zone (Very Important) : [Choose region close to application]
+   -----------------------------------
+      Region : Where DB physically lives [Ex : asia-south1] 
+      Zone options:
+         Single Zone
+         High Availability (Multi-zone)
+      Single Zone
+        ✔ Cheaper
+        ❌ No automatic failover : No automatic failover means if the database instance goes down, it will not switch to another instance automatically and requires manual intervention to restore service.
+      High Availability (Recommended)
+        ✔ Automatic failover
+        ✔ Zero manual intervention
+        ❌ Slightly more cost
+     👉 Interview line:
+           Production workloads should use HA configuration.
+
+    5. Machine Configuration (CPU & Memory) : 
+    ------------------------------------------
+         Choose:
+           Shared core (small workloads)
+           Dedicated core (production)
+        If you choose less:
+          ❌ Slow queries
+          ❌ Connection issues
+        If you choose more:
+          ❌ Higher cost
+        👉 You can scale vertically later, but brief downtime may occur.
+
+   6. Storage Configuration (Critical) :
+   -------------------------------------
+        > Storage Type : 
+        ----------------
+          SSD (recommended) : SSD is recommended because it provides much faster read/write performance and lower latency,
+          HDD (cheap, slow) : HDD is cheaper but significantly slower, which can impact database performance
+       👉 Always choose SSD for production
+        > Storage Size : 
+        ----------------
+           Example : 100 GB, If too small:  ❌ DB stops when disk is full
+        > Enable Automatic Storage Increase :
+        -------------------------------------
+           What it does :
+             GCP automatically increases disk when it’s almost full
+           If ENABLED:
+              ✔ Prevents outages
+              ✔ Safer for production
+          If NOT enabled:
+            ❌ Disk full → DB becomes read-only
+            ❌ Manual intervention required
+
+   7. Connectivity Options :
+   -------------------------
+        > Public IP : [NOT best practice]
+        -------------
+            Cloud SQL gets a public IP and accepts connections from the internet, restricted by IP allowlist and encrypted using SSL.
+            Needs:
+              Authorized networks (IP allowlist)
+              SSL
+              ✔ Easy to connect
+              ❌ Less secure
+            Why NOT best practice: Exposed to the internet, higher attack surface, relies heavily on firewall rules.
+        > Private IP (Recommended) :
+        ----------------------------
+            DB gets private IP inside VPC [Cloud SQL is assigned a private IP inside your VPC using Private Service Access, and traffic flows entirely over Google’s internal network.]
+            Requires Private Service Access
+              ✔ Secure    
+              ✔ Low latency
+             ❌ Slight setup complexity
+          Private IP is preferred for internal applications.
+          Why best practice: No internet exposure, lower latency, stronger network isolation for internal applications.
+        > Cloud SQL Auth Proxy / Connector :
+        ------------------------------------
+            IAM-based secure connection [The proxy authenticates using IAM, creates a secure tunnel to Cloud SQL, and forwards traffic without exposing DB credentials or IPs. ]
+            No DB passwords exposed
+               ✔ Best practice
+               ✔ Highly secure 
+            Why best practice: Eliminates password management, avoids public IPs, works seamlessly with IAM and private networking.
