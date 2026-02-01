@@ -1,0 +1,217 @@
+What is mean by Bigquery :
+==========================
+  BigQuery is a serverless, highly scalable, columnar, SQL-based data warehouse designed for fast analytics on massive datasets without infrastructure management.
+ > Modern Data Warehouse :
+ -------------------------
+   What it means
+     BigQuery is not a traditional database (like MySQL, Oracle).
+     It is built for analytics, not for transactions.
+   Key idea
+     Designed to analyze huge volumes of data (GB → TB → PB).
+     Optimized for read-heavy analytical queries.
+   Interview line
+     BigQuery is a fully managed, cloud-native, modern data warehouse for large-scale analytics.
+
+ > Serverless Platform :
+ -----------------------
+    What it means
+      No servers to create
+      No clusters to manage
+      No patching, scaling, or maintenance
+    We only do
+      Upload data
+      Run SQL queries
+    Google handles
+      Compute
+      Storage
+      Scaling
+      Availability
+    Interview line
+      BigQuery is serverless — users don’t manage infrastructure, only data and queries.
+
+ > Highly Scalable :
+ -------------------
+    What it means
+      Automatically scales up and down
+      Can handle 1 user or 10,000 users querying at the same time
+    Example
+      One analyst runs a query on 10 GB
+      Another runs a query on 5 PB
+    👉 Both work without manual scaling
+    Interview line
+      BigQuery separates storage and compute, allowing independent and massive scalability
+
+ > To Work With Large Sets of Data :
+ -----------------------------------
+   What it means
+     Built specifically for big data
+     Not meant for OLTP workloads (frequent inserts/updates per row)
+   Typical data size
+     Logs
+     Clickstream data
+     IoT data
+     Financial / analytics data
+  Interview contrast 
+    Tool	             Purpose
+  Cloud SQL	  Small to medium transactional data
+  BigQuery	     Large analytical data
+
+ > Tabular / Structured (Schema Defined) : 
+ -----------------------------------------
+     What it means
+       Data is stored in tables
+       Each table has:
+         Columns
+         Data types
+         Schema
+       Schema types
+         Required
+         Nullable
+         Repeated (arrays)
+       Example :
+         user_id   STRING
+         event_ts  TIMESTAMP
+         country   STRING
+     Interview note
+       BigQuery enforces schema but also supports schema evolution.
+
+ > Built-in Query Engine :
+ -------------------------
+     What it means
+       BigQuery has its own distributed query engine
+       Based on Dremel architecture
+     Why it’s powerful
+       Queries run in parallel across thousands of machines
+       No need to install SQL engines
+     Interview line
+       BigQuery uses a massively parallel processing (MPP) engine.
+
+ > Runs Standard SQL :
+ ---------------------
+    What it means
+      Uses ANSI SQL
+      Similar to MySQL / PostgreSQL / Oracle SQL
+    Supports
+      JOIN
+      GROUP BY
+      WINDOW functions
+      Subqueries
+      CTEs (WITH)
+    Example :
+    ---------
+      SELECT country, COUNT(*) 
+      FROM dataset.table
+      GROUP BY country;
+    Interview tip
+      BigQuery supports Standard SQL by default (Legacy SQL is deprecated).
+
+ > Performance :
+ ---------------
+   a. Terabytes → Seconds
+        Queries on TB-scale data often finish in seconds
+   b. Petabytes → Minutes
+        Even PB-scale queries finish in minutes
+   Why
+     Columnar storage     : Reads only the required columns instead of the whole row, so queries are faster.
+     Distributed execution : Query work is split and run in parallel on many machines at the same time.
+     Query pruning        : BigQuery skips unnecessary data blocks/partitions and scans only relevant data.
+   Interview line
+     BigQuery delivers interactive query performance at massive scale.
+
+ > High Performance Without Managing Infrastructure :
+ ----------------------------------------------------
+    What it means
+      You don’t choose:
+        Machine types
+        Disk sizes
+        Cluster size
+      Google auto-optimizes
+        CPU
+        Memory
+        Network
+        Storage
+      Interview line
+        BigQuery abstracts infrastructure complexity while maintaining high performance.
+
+ > No Concept of Indexes :
+ -------------------------
+    Important concept
+      Unlike MySQL / PostgreSQL:
+        ❌ No B-Tree indexes
+        ❌ No primary key indexes
+    Why?
+      BigQuery scans data using columnar storage
+      Indexes don’t scale well at PB level
+    Optimization instead
+      Partitioning
+      Clustering
+    Interview question
+      How does BigQuery perform fast queries without indexes?
+      Answer: Columnar storage + partitioning + clustering. [ Means Read only needed columns, scan only needed time/data range, and keep related data together for faster queries]
+
+ > Storage Methods :
+ -------------------
+     a. BigQuery → Columnar Storage
+     What it means
+       Data stored column-by-column, not row-by-row
+     Benefits
+       Reads only required columns
+       Less data scanned
+       Faster queries
+       Cheaper
+     b. Traditional → Row Storage
+       Reads full rows
+       Better for transactions, not analytics 
+    Interview table
+      Storage	      Best for
+      Column	      Analytics
+       Row	       Transactions
+
+ > Batch + Real-Time Analytics :
+ -------------------------------
+   Batch
+     Load files (CSV, JSON, Avro, Parquet)
+     Analyze historical data
+   Streaming
+     Insert data in real time
+     Use cases:
+       Live dashboards
+       Real-time monitoring
+   Tools
+     Batch: Cloud Storage → BigQuery
+     Streaming: Pub/Sub → BigQuery
+
+ > Working (Core Components) :
+ -----------------------------
+   a. Datasets
+      Logical container
+      Like a database
+   b. Tables
+      Actual data storage
+      Structured rows & columns
+   c. Views
+      Virtual tables
+      Stored SQL queries
+      No data stored
+   Hierarchy :
+   -----------
+     Project
+       └── Dataset
+             ├── Table
+             └── View
+
+ > What We Can Do :
+ ------------------
+   a. Collect (Batch + Streaming)
+        Upload files
+        Stream events
+   b. Store
+        Cost-effective long-term storage
+   c. Process / Transform
+        Clean data
+        Join tables
+        Aggregate data
+   d. Analyze
+        Business insights
+        Dashboards
+        ML models (BigQuery ML)
