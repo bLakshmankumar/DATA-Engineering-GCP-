@@ -1,0 +1,160 @@
+MySQL Migration: VM → Cloud SQL (Export & Import) :
+===================================================
+Big Picture (Simple Theory)
+Imagine we already have:
+------------------------
+  A VM
+    MySQL installed on the VM
+  Data inside MySQL:
+    Databases
+    Tables
+    Views
+    Functions / Procedures
+  Goal:
+   👉 Move all MySQL data from VM to Cloud SQL
+
+Methods for migration :
+========================
+  > Manual (Export & Import)
+  > DMS (Database Migration Service)
+ Right now we focus on Manual method.
+
+# What is Manual Migration (Export & Import)?
+=============================================
+  Manual migration means:
+    Export data from source MySQL
+    Store it as a dump file
+    Upload dump to GCS
+    Import dump into Cloud SQL
+
+ When should we use Manual Method?
+ ---------------------------------
+   ✔ Small / medium databases
+   ✔ One-time migration 
+   ✔ Minimal downtime acceptable
+   ✔ Simple MySQL versions
+   ❌ Not good for:
+       Large databases
+       Near-zero downtime requirements
+Real-time Flow :
+----------------
+  MySQL on VM 
+   ──(mysqldump)──▶ Dump file (.sql) 
+   ──(upload)──▶ Google Cloud Storage (GCS) 
+   ──(Cloud SQL import)──▶ Cloud SQL (MySQL)
+Simple explanation : 
+--------------------
+  mysqldump exports data from VM MySQL
+  Dump file is uploaded to GCS
+  Cloud SQL import pulls data from GCS into Cloud SQL
+
+# Lets Step-by-Step Manual Migration (REALTIME) :
+=================================================
+  STEP 0️⃣ Prerequisites :
+  -----------------------
+    ✔ VM has MySQL running
+    ✔ Cloud SQL MySQL instance created
+    ✔ GCS bucket created
+    ✔ Network connectivity
+    ✔ Permissions:
+        VM → GCS access
+        Cloud SQL → GCS access
+   STEP 1️⃣ Export data from MySQL on VM :
+   ---------------------------------------
+     Login to VM :
+     -------------
+        ssh user@vm-ip
+     Export single database (example) :
+     ----------------------------------
+      mysqldump -u root -p \
+      --routines --triggers --events \
+      orders_db > orders_db.sql
+
+     Export ALL databases (Recommended) :
+     ------------------------------------
+       mysqldump -u root -p \
+       --routines \
+       --triggers \
+       --events \
+       --databases db1 db2 > full_dump.sql
+      What this includes: 
+      --------------------
+        Option	              Includes
+      --routines	   Stored functions & procedures
+      --triggers	            Triggers
+        --events	             Events
+      --databases	        DB structure + data
+     👉 This covers tables, views, functions
+
+   STEP 2️⃣ Verify dump file :
+   ---------------------------
+     ls -lh orders_db.sql
+    👉 Make sure file is created and non-zero size
+
+   STEP 3️⃣ Upload dump to GCS :
+   -----------------------------
+     Create GCS bucket (if not exists) 
+        gsutil mb gs://mysql-migration-bucket
+     Upload dump file 
+        gsutil cp orders_db.sql gs://mysql-migration-bucket/
+
+   STEP 4️⃣ Prepare Cloud SQL :
+   ---------------------------
+    ✔ Cloud SQL MySQL instance running
+    ✔ Database exists (or let import create it)
+    ✔ Enough storage
+    ✔ Same or higher MySQL version
+
+   STEP 5️⃣ Import dump into Cloud SQL :
+   ------------------------------------
+     Run from Cloud Shell or local machine: 
+       gcloud sql import sql orders-db-prod \
+       gs://mysql-migration-bucket/orders_db.sql \
+       --database=orders_db
+     > What happens internally:
+     --------------------------
+         Cloud SQL pulls file from GCS
+         Executes SQL statements
+         Creates:
+           Tables
+           Views
+           Functions
+           Data
+
+     STEP 6️⃣ Monitor import status :
+     --------------------------------
+       gcloud sql operations list --instance=orders-db-prod Or check in "GCP Console → Cloud SQL → Operations"
+
+     STEP 7️⃣ Validate migration :
+     -----------------------------
+       Connect to Cloud SQL:
+         gcloud sql connect orders-db-prod --user=root
+       Run :
+         SHOW DATABASES;
+         USE orders_db;
+         SHOW TABLES;
+         SELECT COUNT(*) FROM orders;
+         SHOW FUNCTION STATUS;
+         SHOW FULL TABLES WHERE Table_type = 'VIEW';
+       ✔ Data verified
+       ✔ Migration complete 
+   
+  Note : Downtime in Manual Migration (Important)
+  -----------------------------------------------
+   No new data should be written to the source database while you are taking the dump.
+    ❌ During export:
+         Writes should be stopped
+         Otherwise data mismatch
+    👉 Usually:
+         Stop app
+         Take dump
+         Import
+         Start app
+
+
+  
+     
+   
+
+
+No automation, no replication — one-time movement.
